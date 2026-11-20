@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f6f1">
+    <title>Tempo — Mon horaire d’étude</title>
+    <link rel="stylesheet" href="styles.css?v=3">
+    <script src="app.js?v=3" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Tempo, accueil">
+        <span class="brand-mark" aria-hidden="true">t.</span>
+        <span>tempo</span>
+      </a>
+      <span class="topbar-note"><span class="status-dot"></span> Votre semaine, à votre rythme</span>
+    </header>
+
+    <main class="page-shell">
+      <section class="intro">
+        <p class="eyebrow">MIEUX ÉTUDIER, SANS S’OUBLIER</p>
+        <h1>Une semaine qui<br><span>vous ressemble.</span></h1>
+        <p class="intro-copy">Dites-nous ce qui remplit déjà vos journées. On vous aidera à trouver du temps pour étudier — et pour souffler.</p>
+        <div class="intro-stats" aria-label="Résumé de l’horaire">
+          <div><strong id="commitment-count">0</strong><span>engagements</span></div>
+          <i></i>
+          <div><strong id="study-hours">0 h</strong><span>d’étude planifiées</span></div>
+        </div>
+      </section>
+
+      <div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+
+      <div class="workspace">
+        <section class="panel questionnaire" aria-labelledby="questionnaire-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">ÉTAPE 1 — VOS REPÈRES</p>
+              <h2 id="questionnaire-title">Votre semaine</h2>
+            </div>
+            <span class="step-badge">01</span>
+          </div>
+
+          <div class="field-grid">
+            <label class="field">
+              <span>Nombre de cours</span>
+              <select id="course-count" aria-label="Nombre de cours"></select>
+            </label>
+            <label class="field">
+              <span>Nombre de laboratoires</span>
+              <select id="lab-count" aria-label="Nombre de laboratoires"></select>
+            </label>
+          </div>
+
+          <div class="field-grid rhythm-fields">
+            <label class="field">
+              <span>Heure de lever</span>
+              <select id="wake-time" aria-label="Heure de lever"></select>
+            </label>
+            <label class="field">
+              <span>Heure de coucher</span>
+              <select id="sleep-time" aria-label="Heure de coucher"></select>
+            </label>
+          </div>
+          <label class="field cap-field">
+            <span>Maximum d’étude par jour</span>
+            <select id="daily-cap" aria-label="Maximum d’étude par jour"></select>
+            <small>On répartira les séances pour éviter les journées trop chargées.</small>
+          </label>
+
+          <div class="section-divider"></div>
+          <div class="subheading">
+            <div>
+              <p class="eyebrow">ÉTAPE 2 — VOS ENGAGEMENTS</p>
+              <h3>Construisez votre horaire</h3>
+            </div>
+            <span class="subheading-icon" aria-hidden="true">↘</span>
+          </div>
+          <p class="helper-copy">Ajoutez vos cours, sports, quarts de travail et temps libres. Choisissez simplement une catégorie et des heures.</p>
+
+          <form id="event-form" class="event-form">
+            <div class="field-grid">
+              <label class="field">
+                <span>Activité</span>
+                <select id="event-category">
+                  <option value="cours">Cours</option>
+                  <option value="labo">Laboratoire</option>
+                  <option value="sport">Sport</option>
+                  <option value="travail">Travail</option>
+                  <option value="libre">Temps libre</option>
+                  <option value="autre">Autre engagement</option>
+                </select>
+              </label>
+              <label class="field">
+                <span>Jour</span>
+                <select id="event-day"></select>
+              </label>
+            </div>
+            <div id="course-fields" class="course-fields">
+              <label class="field">
+                <span id="course-select-label">Cours</span>
+                <select id="course-id"></select>
+              </label>
+              <div class="field-grid">
+                <label class="field">
+                  <span>Difficulté ressentie</span>
+                  <select id="difficulty">
+                    <option value="1">Plutôt facile</option>
+                    <option value="2" selected>Modérée</option>
+                    <option value="3">Difficile</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>Étude souhaitée / semaine</span>
+                  <select id="study-target"></select>
+                </label>
+              </div>
+              <p class="field-hint">Ces préférences sont conservées pour chaque cours.</p>
+            </div>
+            <div class="field-grid time-fields">
+              <label class="field">
+                <span>Début</span>
+                <select id="event-start"></select>
+              </label>
+              <label class="field">
+                <span>Fin</span>
+                <select id="event-end"></select>
+              </label>
+            </div>
+            <button class="button button-dark button-full" type="submit">
+              <span aria-hidden="true">＋</span> Ajouter à ma semaine
+            </button>
+          </form>
+
+          <div class="commitments">
+            <div class="list-heading">
+              <h3>Mes engagements</h3>
+              <span id="event-total" class="count-pill">0</span>
+            </div>
+            <ul id="event-list" class="event-list"></ul>
+            <p id="empty-events" class="empty-note">Votre horaire est encore vide. Ajoutez un premier engagement ci-dessus.</p>
+          </div>
+        </section>
+
+        <section class="panel planner" aria-labelledby="planner-title">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">ÉTAPE 3 — VOTRE PLAN</p>
+              <h2 id="planner-title">Du temps pour étudier</h2>
+            </div>
+            <span class="step-badge step-badge-green">02</span>
+          </div>
+
+          <div class="plan-callout">
+            <span class="callout-icon" aria-hidden="true">✳</span>
+            <div>
+              <strong>Un horaire réaliste, pas parfait.</strong>
+              <p>Les séances tiennent compte de vos engagements, de votre énergie et du temps que vous souhaitez consacrer à chaque cours.</p>
+            </div>
+          </div>
+
+          <div class="schedule-heading">
+            <div>
+              <p class="eyebrow">VOTRE EMPLOI DU TEMPS</p>
+              <h3>La semaine en un coup d’œil</h3>
+            </div>
+            <button id="generate-button" class="button button-green" type="button">Créer mon horaire <span aria-hidden="true">↗</span></button>
+          </div>
+
+          <div id="schedule-grid" class="schedule-grid"></div>
+          <p id="empty-schedule" class="empty-schedule">Ajoutez vos engagements, puis créez votre horaire d’étude.</p>
+
+          <div class="manual-editor">
+            <div class="list-heading">
+              <div>
+                <p class="eyebrow">À VOUS DE JOUER</p>
+                <h3>Personnalisez votre plan</h3>
+              </div>
+              <span class="edit-mark" aria-hidden="true">✎</span>
+            </div>
+            <p class="helper-copy">Déplacez ou retirez une séance, ou ajoutez-en une à votre façon.</p>
+            <div id="study-list" class="study-list"></div>
+            <p id="empty-studies" class="empty-note">Vos séances d’étude apparaîtront ici. Vous pourrez ensuite les modifier.</p>
+
+            <form id="manual-form" class="manual-form">
+              <label class="field">
+                <span>Cours à étudier</span>
+                <select id="manual-course"></select>
+              </label>
+              <div class="field-grid">
+                <label class="field">
+                  <span>Jour</span>
+                  <select id="manual-day"></select>
+                </label>
+                <label class="field">
+                  <span>Début</span>
+                  <select id="manual-start"></select>
+                </label>
+              </div>
+              <label class="field">
+                <span>Durée</span>
+                <select id="manual-duration"></select>
+              </label>
+              <button class="button button-outline button-full" type="submit">＋ Ajouter une séance</button>
+            </form>
+          </div>
+          <p class="privacy-note"><span aria-hidden="true">◉</span> Vos réponses restent enregistrées dans ce navigateur.</p>
+        </section>
+      </div>
+      <footer>Tempo <span>·</span> Prenez le temps de prendre votre temps.</footer>
+    </main>
+  </body>
+</html>
